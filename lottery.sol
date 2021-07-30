@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.7.0 <0.9.0;
 
 /** 
@@ -8,16 +8,18 @@ pragma solidity >=0.7.0 <0.9.0;
 contract Lottery {
     
     // Valor acumulado do premio do sorteio
-    uint64 prize = 0; 
+    uint64 acumulatedPrize = 0; 
     
     // Dados armazenados de cada participante
     struct Participant {
-        
+        uint64 number;
     }
     
     // Essa é a lista de participantes do sorteio
     Participant[] public participans;
     
+    // Mapeamento para saber quanto ether ususário possui
+    mapping(address => uint64) equity_ether;
     
     // Aqui inicializamos e limpamos a lista de participantes
     // para cada novo sorteio
@@ -26,7 +28,7 @@ contract Lottery {
     }
     
     // Aqui registramos um participante no sorteio
-    function registerParticipant() public {
+    function registerParticipant(address participant) public {
         
     }
     
@@ -41,7 +43,11 @@ contract Lottery {
     }
     
     // Aqui retornamos o valor do sorteio acumulado até o momento
-    function getPrizeAmount() public {
-        
+    function getAcumulatedPrizeAmount() external view returns (uint64) {
+        return acumulatedPrize;
+    }
+    
+    function getParticipantsList() external view returns (Participant[]) {
+        return participans;
     }
 }
