@@ -7,20 +7,16 @@ pragma solidity >=0.7.0 <0.9.0;
  */
 contract Lottery {
     
-    // Valor acumulado do premio do sorteio
-    uint64 acumulatedPrize = 0; 
+    uint64 public acumulatedPrize = 0;      // Valor acumulado do premio do sorteio
+    address public winnerAddress;           // Esse é o endereço do vencedor do sorteio
+    Participant[] public participants;      // Essa é a lista de participantes do sorteio
+    
     
     // Dados armazenados de cada participante
     struct Participant {
         address ticketNumber;   // O endereço do usuário é o própnio ticket do sorteio
         bool isPaid;            // Variável de controle para saber se o ticket foi pago realmente
     }
-    
-    // Essa é a lista de participantes do sorteio
-    Participant[] public participants;
-    
-    // Esse é o endereço do vencedor do sorteio
-    address winnerAddress;
     
     // Mapeamento para saber quanto ether uusário tem
     mapping(address => uint64) equity_ether;
@@ -44,21 +40,9 @@ contract Lottery {
     
     // Aqui o contrato envia o premio ao vencedor
     function sendWinnerPrize() public {
-        
+        // Agora que o premio foi pago, retorna o valor acumulado para 0
+        acumulatedPrize = 0;
     }
     
-    function getWinnerAddress() public view returns (address) {
-        return winnerAddress;
-    }
-    
-    // Aqui retornamos o valor do sorteio acumulado até o momento
-    function getAcumulatedPrizeAmount() public view returns (uint64) {
-        return acumulatedPrize;
-    }
-    
-    /*
-    function getParticipantsList() public view returns (Participant[]) {
-        return participants;
-    }
-    */
+
 }
