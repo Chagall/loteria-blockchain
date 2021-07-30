@@ -12,24 +12,29 @@ contract Lottery {
     
     // Dados armazenados de cada participante
     struct Participant {
-        uint64 number;
+        address ticketNumber;   // O endereço do usuário é o própnio ticket do sorteio
+        bool isPaid;            // Variável de controle para saber se o ticket foi pago realmente
     }
     
     // Essa é a lista de participantes do sorteio
-    Participant[] public participans;
+    Participant[] public participants;
     
-    // Mapeamento para saber quanto ether ususário possui
+    // Esse é o endereço do vencedor do sorteio
+    address winnerAddress;
+    
+    // Mapeamento para saber quanto ether uusário tem
     mapping(address => uint64) equity_ether;
     
-    // Aqui inicializamos e limpamos a lista de participantes
-    // para cada novo sorteio
+    // Aqui inicializamos e limpamos a lista de participantes para cada novo sorteio
     function initParticipantsList() public {
-        
+        while(participants.length > 0) {
+            participants.pop();
+        }
     }
     
     // Aqui registramos um participante no sorteio
-    function registerParticipant(address participant) public {
-        
+    function registerParticipant(address participantAddr) public {
+        participants.push(Participant({ ticketNumber: participantAddr, isPaid: true }));
     }
     
     // Aqui selecionamos o vencedor do sorteio
@@ -42,12 +47,18 @@ contract Lottery {
         
     }
     
+    function getWinnerAddress() public view returns (address) {
+        return winnerAddress;
+    }
+    
     // Aqui retornamos o valor do sorteio acumulado até o momento
-    function getAcumulatedPrizeAmount() external view returns (uint64) {
+    function getAcumulatedPrizeAmount() public view returns (uint64) {
         return acumulatedPrize;
     }
     
-    function getParticipantsList() external view returns (Participant[]) {
-        return participans;
+    /*
+    function getParticipantsList() public view returns (Participant[]) {
+        return participants;
     }
+    */
 }
