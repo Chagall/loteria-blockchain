@@ -16,7 +16,7 @@ contract Lottery {
     
     // Dados armazenados de cada participante
     struct Participant {
-        address ticketNumber;   // O endereço do usuário é o própnio ticket do sorteio
+        address ticketNumber;   // O endereço do usuário é o próprio ticket do sorteio
         bool isPaid;            // Variável de controle para saber se o ticket foi pago realmente
     }
     
@@ -29,24 +29,34 @@ contract Lottery {
     }
     
     // Aqui registramos um participante no sorteio
-    function registerParticipant(address participantAddress) public {
+    //function registerParticipant(address participantAddress) public {
+    function registerParticipant(address participantAddress) public {    
         participants.push(Participant({ ticketNumber: participantAddress, isPaid: true }));
+        acumulatedPrize += ticketPrice;
     }
     
     // Aqui selecionamos o vencedor do sorteio
-    function selectWinner() public {
+    function selectWinner() public returns (uint) {
         //uint participantsListLen = participants.length;
+        uint randomWinner = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp)))%participants.length;
+        winnerAddress = payable(participants[randomWinner].ticketNumber);
+        return randomWinner;
     }
     
     // Aqui o contrato envia o premio ao vencedor
-    function sendPrize() public {
+    function sendPrize() public payable {
         // Envia o valor acumulado ao vencedor
-        winnerAddress.transfer(acumulatedPrize);
+        // winnerAddress.transfer(acumulatedPrize);
         // Agora que o premio foi pago, retorna o valor acumulado para 0
         acumulatedPrize = 0;
+        initParticipantsList();
     }
     
     function getAcumulatedPrize() public view returns (uint256) {
         return acumulatedPrize;
+    }
+    
+    function howManyparticipants() public view returns (uint256) {
+        return participants.length;
     }
 }
